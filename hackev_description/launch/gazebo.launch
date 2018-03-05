@@ -1,0 +1,34 @@
+<launch>
+
+  <arg name="model_urdf" default="$(find hackev_description)/urdf/hackev.urdf"/>
+  <arg name="model_xacro" default="$(find hackev_description)/urdf/hackev.xacro"/>
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!--<arg name="world_name" value="$(find hackev_description)/worlds/myworld.world"/>-->
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+
+  <!-- ここらへんでセンサの初期化とかする -->
+  
+  <!-- xacroファイルをurdfファイルに変換する >
+  <node name="xacro" pkg="xacro" type="xacro.py" args="$(arg model_xacro) > $(arg model_urdf)" />-->
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description" command="$(find xacro)/xacro.py --inorder $(arg model_xacro)" />
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -model hackev -param robot_description"/>
+
+  <!-- ros_control motoman launch file -->
+  <include file="$(find hackev_control)/launch/hackev_control.launch"/>
+
+</launch>

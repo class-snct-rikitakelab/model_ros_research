@@ -1,0 +1,19 @@
+<launch>
+
+  <!-- HackEVのJointControllerの設定をファイルから読み込み，parameter serverに読み込む -->
+  <rosparam file="$(find hackev_control)/config/hackev_control.yaml" command="load"/>
+
+  <!--<node name="hackev_control" pkg="hackev_control" type="hackev_control"
+        output="screen" ns="/hackev"/>-->
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/hackev" args="left_joint_position_controller right_joint_position_controller arm_joint_position_controller tail_joint_position_controller joint_state_controller"/>
+
+  <!-- Jointの状態をもとに位置計算などしてトピックに流してrvizとかで使えるようにする -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    respawn="false" output="screen" ns="/hackev">
+  <!--<remap from="/joint_states" to="/hackev/joint_states" />-->
+  </node>
+
+</launch>

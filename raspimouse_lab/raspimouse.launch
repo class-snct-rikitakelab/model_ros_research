@@ -1,0 +1,7 @@
+<launch>
+  <param name="lightsensors_freq" value="10" />
+  <node pkg="raspimouse_lab" name="lightsensors" type="rtlightsensors.py" required="true" />
+  <node pkg="raspimouse_lab" name="switches" type="rtswitches.py" required="true" />
+  <node pkg="raspimouse_lab" name="buzzer" type="rtbuzzer.py" required="true" />
+  <node pkg="raspimouse_lab" name="motor" type="rtmotor.py" required="true" />
+</launch>

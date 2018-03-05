@@ -1,0 +1,4 @@
+float32 target
+float32 measure
+---
+int16 input
